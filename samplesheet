@@ -1,0 +1,3 @@
+sample,fastq1,fastq2
+1S,/Users/lizicheng/Desktop/Code/nextflow/test_subset/1S_1_sub.fastq.gz,/Users/lizicheng/Desktop/Code/nextflow/test_subset/1S_2_sub.fastq.gz
+3L,/Users/lizicheng/Desktop/Code/nextflow/test_subset/3L_1_sub.fastq.gz,/Users/lizicheng/Desktop/Code/nextflow/test_subset/3L_2_sub.fastq.gz
