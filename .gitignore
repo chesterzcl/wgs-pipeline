@@ -1,0 +1,26 @@
+# nextflow
+work/
+results*/
+.nextflow*
+.nf.cache/
+*.log
+*.report
+*.timeline.html
+
+# data
+*.fastq.gz
+*.bam
+*.bai
+*.vcf*
+*.g.vcf*
+*.html
+*.json
+*.sif
+*.fa*
+*.fai
+*.dict
+
+# system
+.DS_Store
+.idea/
+.vscode
