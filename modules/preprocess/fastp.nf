@@ -1,8 +1,7 @@
 process FASTP {
   tag "${sample}"
   publishDir "${params.outdir}/trimmed", mode: 'copy', pattern: '*.trim.fastq.gz'
-  publishDir "${params.outdir}/qc/fastp", mode: 'copy', pattern: '*.fastp.{html,json}'
-
+  
   input:
     tuple val(sample), val(library), path(fqs), val(rg)
 
@@ -21,6 +20,7 @@ process FASTP {
     --detect_adapter_for_pe \
     --trim_front1 10 --trim_front2 10 \
     --cut_right --cut_right_window_size 10 --cut_right_mean_quality 30 --length_required 50 \
+    --trim_poly_g \
     --thread ${task.cpus} \
     --html ${sample}.${library}.fastp.html \
     --json ${sample}.${library}.fastp.json

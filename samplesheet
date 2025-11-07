@@ -1,3 +1,4 @@
 sample,fastq1,fastq2
-1S,/Users/lizicheng/Desktop/Code/nextflow/test_subset/1S_1_sub.fastq.gz,/Users/lizicheng/Desktop/Code/nextflow/test_subset/1S_2_sub.fastq.gz
-3L,/Users/lizicheng/Desktop/Code/nextflow/test_subset/3L_1_sub.fastq.gz,/Users/lizicheng/Desktop/Code/nextflow/test_subset/3L_2_sub.fastq.gz
+1S,/home/zl436/ycga_work/oyster_genome/WGS/1S_1.fastq.gz,/home/zl436/ycga_work/oyster_genome/WGS/1S_2.fastq.gz
+3L,/home/zl436/ycga_work/oyster_genome/WGS/3L_1.fastq.gz,/home/zl436/ycga_work/oyster_genome/WGS/3L_2.fastq.gz
+11S,/home/zl436/ycga_work/oyster_genome/WGS/11S_1.fastq.gz,/home/zl436/ycga_work/oyster_genome/WGS/11S_2.fastq.gz

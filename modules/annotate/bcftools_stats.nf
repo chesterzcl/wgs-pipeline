@@ -1,15 +1,15 @@
 process BCFTOOLS_STATS {
-  tag "${vcf.simpleName}"
+  tag "${type}:${vcf.simpleName}"
   publishDir "${params.outdir}/vcf", mode: 'copy', pattern: '*.vcfstats.txt'
 
   input:
-    path vcf
+    tuple val(type), path(vcf)
 
   output:
-    path "${vcf.simpleName}.vcfstats.txt", emit: stats
+    tuple val(type), path("${vcf.simpleName}.${type}.vcfstats.txt"), emit: stats
 
   script:
   """
-  bcftools stats -F ${params.fasta} ${vcf} > ${vcf.simpleName}.vcfstats.txt
+  bcftools stats -F ${params.fasta} ${vcf} > ${vcf.simpleName}.${type}.vcfstats.txt
   """
 }

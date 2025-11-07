@@ -1,23 +1,24 @@
 process GENOTYPEGVCFS {
-  tag "JointGenotyping"
+  tag "${interval}"
   publishDir "${params.outdir}/vcf", mode: 'copy', pattern: '*.raw.vcf.gz*'
 
   input:
-    // This expects a *list* of GVCF files (from .collect() in main.nf)
-    path gvcfs
+    tuple val(interval), path(workspace)
 
   output:
-    path "joint.raw.vcf.gz"
+    tuple val(interval),
+          path("${params.cohort_name}.${interval}.raw.vcf.gz"),
+          path("${params.cohort_name}.${interval}.raw.vcf.gz.tbi")
 
   script:
-  // Build "-V file1 -V file2 ..." safely in Groovy
-  def vopts = gvcfs.collect { f -> "-V ${f}" }.join(' ')
   """
   gatk GenotypeGVCFs \
     -R ${params.fasta} \
-    ${vopts} \
-    -O joint.raw.vcf.gz
+    -V gendb://${workspace} \
+    -L ${interval} \
+    -O ${params.cohort_name}.${interval}.raw.vcf.gz
 
-  tabix -p vcf joint.raw.vcf.gz
+  gatk IndexFeatureFile -I ${params.cohort_name}.${interval}.raw.vcf.gz
+
   """
 }

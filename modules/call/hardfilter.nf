@@ -1,34 +1,86 @@
 process HARD_FILTER {
   tag "GATK_HardFilter"
-  publishDir "${params.outdir}/vcf", mode: 'copy', pattern: '*.filt.vcf.gz*'
+  publishDir "${params.outdir}/vcf", mode: 'copy', pattern: '*_bi*_filtered.vcf*'
 
   input:
-    path vcf
+    tuple val(interval), path(vcf),path(vcf_tbi)
 
   output:
-    path 'snps.filt.vcf.gz'   , emit: snps
-    path 'indels.filt.vcf.gz' , emit: indels
+    tuple val(interval), path("${vcf.baseName}_biSNP_filtered.vcf"),   emit: snps
+    tuple val(interval), path("${vcf.baseName}_biINDEL_filtered.vcf"), emit: indels  
 
   script:
   """
-  gatk SelectVariants -R ${params.fasta} -V ${vcf} -select-type SNP   -O snps.vcf.gz
-  gatk SelectVariants -R ${params.fasta} -V ${vcf} -select-type INDEL -O indels.vcf.gz
+  gatk SelectVariants \
+    --restrict-alleles-to BIALLELIC \
+    --select-type-to-include SNP \
+    -R ${params.fasta} \
+    -V ${vcf} \
+    -O ${vcf.baseName}_biSNP.vcf
 
-  gatk VariantFiltration -R ${params.fasta} -V snps.vcf.gz -O snps.filt.vcf.gz \
-    --filter-name QD2        --filter-expression 'QD < 2.0' \
-    --filter-name FS60       --filter-expression 'FS > 60.0' \
-    --filter-name MQ40       --filter-expression 'MQ < 40.0' \
-    --filter-name SOR3       --filter-expression 'SOR > 3.0' \
-    --filter-name MQRankSum  --filter-expression 'MQRankSum < -12.5' \
-    --filter-name ReadPosRS  --filter-expression 'ReadPosRankSum < -8.0'
+  gatk IndexFeatureFile \
+    -I ${vcf.baseName}_biSNP.vcf
 
-  gatk VariantFiltration -R ${params.fasta} -V indels.vcf.gz -O indels.filt.vcf.gz \
-    --filter-name QD2        --filter-expression 'QD < 2.0' \
-    --filter-name FS200      --filter-expression 'FS > 200.0' \
-    --filter-name SOR10      --filter-expression 'SOR > 10.0' \
-    --filter-name ReadPosRS  --filter-expression 'ReadPosRankSum < -20.0'
+  gatk VariantFiltration \
+    -V ${vcf.baseName}_biSNP.vcf \
+    -O ${vcf.baseName}_biSNP_marked.vcf \
+    -filter "QD < 2.0"                --filter-name "QD2" \
+    -filter "QUAL < 30.0"             --filter-name "QUAL30" \
+    -filter "SOR > 3.0"               --filter-name "SOR3" \
+    -filter "FS > 60.0"               --filter-name "FS60" \
+    -filter "MQ < 40.0"               --filter-name "MQ40" \
+    -filter "MQRankSum < -12.5"       --filter-name "MQRankSum-12.5" \
+    -filter "ReadPosRankSum < -8.0"   --filter-name "ReadPosRankSum-8"
 
-  tabix -p vcf snps.filt.vcf.gz
-  tabix -p vcf indels.filt.vcf.gz
-  """
+  gatk IndexFeatureFile \
+    -I ${vcf.baseName}_biSNP_marked.vcf
+
+  gatk SelectVariants \
+    --restrict-alleles-to BIALLELIC \
+    --exclude-filtered \
+    --select-type-to-include SNP \
+    -R ${params.fasta} \
+    -V ${vcf.baseName}_biSNP_marked.vcf \
+    -O ${vcf.baseName}_biSNP_filtered.vcf
+
+  gatk IndexFeatureFile \
+    -I ${vcf.baseName}_biSNP_filtered.vcf
+
+  rm -f ${vcf.baseName}_biSNP.vcf ${vcf.baseName}_biSNP_marked.vcf
+
+  gatk SelectVariants \
+    --restrict-alleles-to BIALLELIC \
+    --select-type-to-include INDEL \
+    -R ${params.fasta} \
+    -V ${vcf} \
+    -O ${vcf.baseName}_biINDEL.vcf
+
+  gatk IndexFeatureFile \
+    -I ${vcf.baseName}_biINDEL.vcf
+
+  gatk VariantFiltration \
+    -V ${vcf.baseName}_biINDEL.vcf \
+    -O ${vcf.baseName}_biINDEL_marked.vcf \
+    -filter "QD < 2.0"                --filter-name "QD2" \
+    -filter "FS > 200.0"              --filter-name "FS200" \
+    -filter "SOR > 10.0"              --filter-name "SOR10" \
+    -filter "ReadPosRankSum < -20.0"  --filter-name "ReadPosRankSum-20"
+
+  gatk IndexFeatureFile \
+    -I ${vcf.baseName}_biINDEL_marked.vcf
+
+  gatk SelectVariants \
+    --restrict-alleles-to BIALLELIC \
+    --exclude-filtered \
+    --select-type-to-include INDEL \
+    -R ${params.fasta} \
+    -V ${vcf.baseName}_biINDEL_marked.vcf \
+    -O ${vcf.baseName}_biINDEL_filtered.vcf
+
+  gatk IndexFeatureFile \
+    -I ${vcf.baseName}_biINDEL_filtered.vcf
+
+  rm -f ${vcf.baseName}_biINDEL.vcf ${vcf.baseName}_biINDEL_marked.vcf
+
+   """
 }
