@@ -56,7 +56,7 @@ It is suitable for large-scale population genomic analyses or cohort-based studi
 ### 1. Clone the repository
 ```bash
 git clone https://github.com/chesterzcl/wgs-pipeline.git
-cd wgs-pipeline
+cd wgs-pipeline```
 
 2. Configure the pipeline parameters
 
