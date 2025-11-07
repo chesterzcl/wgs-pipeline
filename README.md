@@ -31,10 +31,13 @@ A fully automated whole-genome sequencing (WGS) variant-calling workflow built w
    cd wgs-pipeline
 
 2. Configure the pipeline parameters
+
    Edit nextflow.config and other configs files within conf folder.
 
 3. Launch with preconfigured scripts
+
    For local testing, use scripts/run_nf_local.sh
+
    For execution on Slurm managed computing clusters, use scripts/run_nf_slurm.sh
 
 
