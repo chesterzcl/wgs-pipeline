@@ -59,11 +59,12 @@ git clone https://github.com/chesterzcl/wgs-pipeline.git
 cd wgs-pipeline
 
 
-2. Configure the pipeline parameters
+### 2. Configure the pipeline parameters
 
 Edit nextflow.config and other configs files within conf folder.
 
-3. Launch with preconfigured scripts
+
+### 3. Launch with preconfigured scripts
 
 For local testing, use scripts/run_nf_local.sh
 
