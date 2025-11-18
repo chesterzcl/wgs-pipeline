@@ -61,15 +61,15 @@ cd wgs-pipeline
 
 ### 2. Configure the pipeline parameters
 
-Edit nextflow.config and other configs files within conf folder.
+View and edit pipeline parameters in nextflow.config and other configs files within conf folder.
 
-Config data in samplesheet file.
+Data location can be configured in samplesheet file.
 
 
 ### 3. Launch with preconfigured scripts
 
 For local testing, use scripts/run_nf_local.sh
 
-For execution on Slurm managed computing clusters, use scripts/run_nf_slurm.sh
+For execution on Slurm managed computing clusters, use scripts/run_nf_slurm.sh. Noting some pipeline parameters will be overridden by the launch scripts.
 
 
