@@ -63,6 +63,8 @@ cd wgs-pipeline
 
 Edit nextflow.config and other configs files within conf folder.
 
+Config data in samplesheet file.
+
 
 ### 3. Launch with preconfigured scripts
 
